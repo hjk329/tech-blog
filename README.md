@@ -2,6 +2,8 @@
   
   [![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=hjk329)](https://github.com/hjk329/github-readme-stats)
   
+  <img align="right" src="https://github-readme-stats.vercel.app/api/top-langs/?username=hjk329&theme=dracula&"/>
+  
   ### 🐥 Hello World 
   
   ---
