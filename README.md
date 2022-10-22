@@ -9,8 +9,8 @@
 </p>
 
 <p>
-<a href="https://hjk329.github.io" target="_blank"><img src="https://img.shields.io/badge/Tech_Blog-0095D5?style=flat&logo=GitHub&logoColor=white"/></a>
-<a href="mailto:dev.hjk329@gmail.com" target="_blank"><img src="https://img.shields.io/badge/dev.hjk329@gmail.com-EA4335?style=flat&logo=Gmail&logoColor=white"/></a>
+<a href="https://hjk329.github.io" target="_blank"><img src="https://img.shields.io/badge/Tech_Blog-0095D5?style=flat-square&logo=GitHub&logoColor=white"/></a>
+<a href="mailto:dev.hjk329@gmail.com" target="_blank"><img src="https://img.shields.io/badge/dev.hjk329@gmail.com-EA4335?style=flat-square&logo=Gmail&logoColor=white"/></a>
 <p/>
   
 
