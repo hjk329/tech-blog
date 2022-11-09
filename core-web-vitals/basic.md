@@ -5,19 +5,153 @@
 
 ## 코어 웹 바이탈(Core Web Vitals)이란?
 구글은 웹 사이트의 성능을 측정하고 보고하는 다양한 지표와 도구를 제공해 왔다. 2020년에 발표한 코어 웹 바이탈(Core Web Vitals)은 우수한 사용자 경험을 제공하기 위한 핵심적인 메트릭 3개(LCP, FID, CLS)를 포함한다.
-<br>
+<br><br>
 
-### 메트릭이란?
+> 메트릭이란?
+
 성능은 상대적일 수 있다. <br> 동일한 사이트를 이용하더라도 빠른 네트워크를 사용하는 사용자는 빠르게, 느린 네트워크를 사용하는 사용자에게는 느리게 동작할 수 있기 때문이다. <br>
 
 따라서, 구글은 성능 측정에 관한 상대성을 줄이고, 정량적으로 측정 가능한 객관적인 기준에서 성능을 비교하고자 했다. 이러한 객관적인 기준을 '메트릭' 이라 칭한다.
 
-2020년을 기준으로 코어 웹 바이탈을 구성하는 메트릭 3개는 아래와 같다.
-- LCP(Largest Contentful Paint, 최대 콘텐츠풀 페인트): 로딩 성능을 측정한다. 최적화된 사용자 경험을 제공하기 위해서는 페이지가 처음으로 로딩된 후 2.5초 이내에 LCP 가 발생해야 한다.
-- FID(First Input Delay, 최초 입력 지연): 웹 사이트와 사용자의 상호 작용을 측정한다. 우수한 사용자 경험 제공을 위해 페이지의 FID가 100밀리초 이하여야 한다.
-- CLS(Cumulative Layout Shift, 누적 레이아웃 시프트): 시각적 안정성을 측정한다. 우수한 사용자 경험을 제공하려면 페이지에서 0.1 이하의 CLS를 유지해야 한다.
+2020년을 기준으로 코어 웹 바이탈을 구성하는 메트릭은 ***LCP, FID, CLS***이다. <br><br>
 
-각 메트릭에 대한 자세한 내용은 메트릭의 측정 기준 및 도구를 알아본 후에 기술하겠다. <br><br>
+각 메트릭을 자세히 알아보겠다. <br><br>
+
+## LCP(Largest Contentful Paint, 최대 콘텐츠풀 페인트)란?
+로딩 성능을 측정하는 지표이다. <br>
+페이지가 처음으로 로드를 시작한 시점을 기준으로 뷰포트 내에 있는 가장 큰 이미지 또는 텍스트 블록의 렌더링 시간을 보고한다. <br>
+우수한 사용자 경험을 제공하기 위해서는 페이지가 처음으로 로딩된 후 2.5초 이내에 LCP가 발생해야 한다. <br><br>
+
+> 로딩 성능을 측정하기 위해서 가장 큰 콘텐츠의 렌더링 시기를 파악하는 이유가 뭘까?
+
+<br>
+기본적으로 로딩 성능을 측정하기 위해서 DOMContentLoaded, Load 와 같은 메트릭을 사용하곤 했다. <br>
+
+웹 페이지가 로딩될때 DOMContentLoaded, Load 이벤트가 발생하는데 해당 이벤트가 발생하는 시점으로 로딩 성능을 측정하려 했던 것이다. <br>
+
+DOMContentLoaded 이벤트는 HTML과 CSS 파싱이 끝나는 시점에 발생한다. <br>
+load 이벤트는 HTML상에 필요한 모든 리소스가 로드된 시점에 발생한다. <br>
+
+따라서, DOMContentLoaded 이벤트가 발생한 후에 Load 이벤트가 발생한다. <br>
+
+크롬 개발자 도구의 Network 패널 하단에서도 DOMContentLoaded, Load 메트릭을 확인할 수 있다. <br><br>
+
+![DOMContentLoaded,Load](/assets/images/core-web-vitals/DOMContentLoaded,Load.png)
+<br><br>
+
+그러나, SPA(Single Page Application)의 등장으로 DOMContentLoaded, Load 메트릭으로는 제대로된 로딩 성능을 측정하기 어려워졌다. <br>
+SPA는 적은 양의 HTML로 DOMContentLoaded, Load 이벤트가 일찍이 발생할 수는 있지만, 해당 이벤트가 발생한 이후에 수많은 스크립트가 실행되기 때문이다. <br>
+예를 들어, CRA로 프로젝트를 생성하면 public 디렉토리 밑에 index.html 은 아래와 같이 구성된다. <br><br>
+
+
+```javascript
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Web site created using create-react-app"
+    />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <!--
+      manifest.json provides metadata used when your web app is installed on a
+      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <!--
+      Notice the use of %PUBLIC_URL% in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
+
+      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+    <title>React App</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <!--
+      This HTML file is a template.
+      If you open it directly in the browser, you will see an empty page.
+
+      You can add webfonts, meta tags, or analytics to this file.
+      The build step will place the bundled scripts into the <body> tag.
+
+      To begin the development, run `npm start` or `yarn start`.
+      To create a production bundle, use `npm run build` or `yarn build`.
+    -->
+  </body>
+</html>
+```
+
+<br><br>
+
+HTML 파일은 단순히 'root' 라는 아이디를 가진 div를 리턴할 뿐이다. 리액트는 자바스크립트 코드를 해당 HTML 파일에 **주입**하여 브라우저가 코드를 실행하도록 한다. <br>
+따라서, HTML 파일이 빠르게 파싱되고 필요한 리소스를 불러왔다고 하더라도 아직 스크립트를 실행하느라 사용자가 실제로 보고 있는 화면은 아직 로딩중일 수가 있다. <br>
+이에 따라 DOMContentLoaded, Load 메트릭으로 로딩 성능을 측정하기에는 부적절할 수 있다고 판단되었다. <br><br>
+
+또한, FCP(First Contentful Paint, 최초 콘텐츠풀 페인트)이라는 메트릭은 로딩 경험의 ‘시작’ 부분만을 포착하기 때문에 전반적인 로딩 성능을 측정하기에 부적절하다고 판단되었다. <br><br>
+
+이외에도 Lighthouse에서 제공하는 FMP(First Meaningful Paint, 유의미한 최초 페인트) 및 SI(Speed Index, 속도 인덱스)와 같은 메트릭이 있지만, 이러한 메트릭은 복잡하고 잘못된 경우가 많아서 페이지의 메인 콘텐츠가 로드된 시점을 식별하기에 부적절하다고 판단되었다고 한다. <br><br>
+
+
+따라서, 구글은 W3C Web Performance Working Group의 토론 및 Google에서 수행한 연구를 바탕으로 ***페이지의 메인 콘텐츠가 로드되는 시기를 측정하는 방법으로 가장 큰 요소가 렌더링된 시기를 확인***하는 것을 고안했다.
+
+### 좋은 LCP 점수는 무엇일까?
+LCP가 2.5초 이내에 발생하는 것이 좋다.
+
+### LCP 측정을 위해 고려되는 요소는 무엇인가?
+- `<img>` 요소
+- `<svg>` 요소 내부의 `<img>` (`<svg>` 요소는 현재 LCP 후보로 간주되지 않는다.)
+- `<video>` 요소
+- url() 함수를 통해 로드된 배경 이미지가 있는 요소
+- 텍스트 노드 또는 기타 인라인 수준 텍스트 하위 요소를 포함하는 블록 수준 요소
+
+### 요소의 크기는 어떻게 결정될까?
+LCP에 대해 보고된 요소의 크기는 일반적으로 ‘뷰포트’ 내에서 사용자에게 표시되는 크기이다. <br><br>
+만약 요소가 뷰포트 외부로 확장되거나, 잘려서 보이지 않는 등의 경우에는 해당 부분은 요소의 크기에 포함되지 않는다. <br>
+만약 기본 크기(Intrinsic size)에서 크기가 조정된 이미지 요소의 경우 보여지는 가시적 크기와 기본 크기 중 ‘더 작은 것’이 보고된다. <br>
+예를 들어 기본 크기보다 작게 축소한 이미지라면 축소된 만큼의 크기가 보고되겠고, 기본 크기보다 크게 확장한 이미지라면 확장한 이미지보다 더 작은 기본 크기가 보고될 것이다. <br><br>
+텍스트 요소의 경우 텍스트 노드의 크기만 고려된다(모든 텍스트 노드를 포함하는 가장 작은 직사각형). 또한, 모든 요소에 대해 CSS를 통해 적용된 여백, 안쪽 여백, 테두리는 고려되지 않는다고 한다.
+
+#### LCP는 언제 보고될까?
+브라우저가 첫 번째 프레임을 그리는 즉시 최대 콘텐츠 요소를 식별하는 PerformanceEntry를 디스패치한다. <br>
+그리고 이후 프레임이 렌더링된 후에는 최대 콘텐츠풀 요소가 변경될 때마다 또다른 PerformanceEntry를 디스패치한다. <br><br>
+
+우선 PerformanceEntry에 대해 간력히 알아보겠다. <br>
+
+> PerformanceEntry란?
+
+Web API 에서 제공하는 PerformanceEntry 객체는 performance timline 상의 단일 성능 수치를 캡슐화한다. <br>
+PerformanceEntry 객체를 생성하는 방법은 아래와 같다. <br>
+
+- 메소드를 통해 ***직접적***으로 생성할 수 있다
+`performance.mark()` 메소드 혹은 `performance.measure()` 메소드를 사용하여 성능을 측정하고 싶은 특정 포인트에서 직접적으로 해당 객체를 생성해서 확인해볼 수 있다.
+
+- 로딩시 ***간접적***으로 생성되기도 한다
+이미지와 같이 리소스를 로딩할때 PerformanceEntry 객체가 생성된다.
+
+<br>
+PerformanceEntry 객체의 프로퍼티로는 name, entryType, startTime, duration 이 있다. <br>
+즉, 특정 entryType 에 대해 성능 메트릭이 처음으로 시작되는 시기(PerformanceEntry가 생성되는 시기), 성능 이벤트가 지속되는 시기를 파악할 수 있다. <br><br>
+
+정리하자면, PerformanceEntry 객체를 통해 최대 콘텐츠풀 요소를 감지할 수 있다. <br>
+정확한 분석을 위해 가장 최근에 디스패치된 PerformanceEntry를 사용한다. <br><br>
+
+처음에 최대 콘텐츠풀 요소로 간주되었다고 하더라도 이후에 다른 더 큰 요소가 렌더링 완료되는 즉시 다른 PerformanceEntry를 통해 더 큰 요소가 최대 콘텐츠풀 요소로 보고된다. <br>
+만약 현재 최대 콘텐츠풀 요소가 뷰포트에서 제거되더라도 이보다 더 큰 요소가 렌더링되지 않는 이상 해당 요소가 최대 콘텐츠풀 요소로 유지된다.
+
+### 요소 레이아웃 및 크기 변경은 어떻게 처리되는가?
+***오직 뷰포트에서 요소의 처음 크기와 위치만 고려한다.***
+즉, 렌더링 이후에 요소의 크기나 위치를 변경해도 새 LCP 후보가 생성되지 않는다. <br>
+만약 처음에 화면 밖에서 렌더링된 이지미는 보고되지 않을 수 있다. <br> 또한, 처음에 뷰포트에서 렌더링된 요소가 아래로 밀려 뷰에서 벗어나더라도 ‘초기’ 뷰포트 내에서의 크기를 보고한다.
+
 
 ## 코어 웹 바이탈 측정 기준
 코어 웹 바이탈은 위 3개의 메트릭이 각각 ***75번째 백분위수***인지를 기준으로 웹 사이트의 사용자 경험이 양호한지 아닌지를 판단한다. <br>
@@ -37,12 +171,29 @@
 ### 코어 웹 바이탈 측정 도구
 코어 웹 바이탈을 측정할 수 있는 도구는 다양하다. 각 도구를 이용하여 우리 프로덕트의 메트릭을 측정해보았다. <br>
 
-- Lighthouse
-LCP, CLS를 측정할 수 있다. Lighthouse에서 측정하는 TBT(Total Blocking Time, 총 차단 시간)은 FID와 관련이 깊어서 참고할 수 있다.
+#### Lighthouse
+LCP, CLS를 측정할 수 있다. Lighthouse에서 측정하는 TBT(Total Blocking Time, 총 차단 시간)은 FID와 관련이 깊어서 참고할 수 있다. <br><br>
+![](/assets/images/core-web-vitals/lighthouse.png)
+<br><br><br><br>
 
+#### PageSpeed Insights
+모바일, 데스크톱 장치 모두에서의 성능을 측정한다. LCP, FID, CLS 메트릭 모두 측정할 수 있으며, 코어 웹 바이탈 평가 합격 및 불합격 여부도 표시된다. <br><br>
+![](/assets/images/core-web-vitals/page-speed-insights.png)
+<br><br><br><br>
 
+#### Chrome DevTools
+Performance 패널을 통해 CLS를 파악할 수 있다. 특히, CLS 점수가 열악할때 Experience 섹션이 생기기도 한다. <br> 또한, 패널 하단의 TBT 점수 FID를 하는 용도로 사용할 수도 있다. <br><br>
+![](/assets/images/core-web-vitals/performance-2022-10-20.png)
+<br><br><br><br>
 
+#### Google Search Console
+코어 웹 바이탈이라는 섹션에서 페이지가 빠른지, 느린지 등의 정보를 파악할 수 있다. <br><br>
+![](/assets/images/core-web-vitals/google-search-console.png) 
+<br><br><br><br>
 
+#### Web Vitals 확장 프로그램
+크롬 웹 스토어에서 설치하여 사용한다. 코어 웹 바이탈의 모든 메트릭을 실시간으로 측정하여 보여준다. <br><br>
+![](/assets/images/core-web-vitals/web-vitals-extension.png)
+<br><br><br><br>
 
-
-
+참고로, [web.dev의 측정 섹션](https://web.dev/measure/)에서도 코어 웹 바이탈 측정을 지원했는데 최근 PageSpeed Insights 로 합쳐졌다고 한다. <br><br><br><br>
