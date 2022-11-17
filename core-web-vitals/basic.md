@@ -338,4 +338,14 @@ Performance 패널을 통해 CLS를 파악할 수 있습니다. 특히, CLS 점�
 ![](/assets/images/core-web-vitals/web-vitals-extension.png)
 <br><br><br><br>
 
-참고로, [web.dev의 측정 섹션](https://web.dev/measure/)에서도 코어 웹 바이탈 측정을 지원했는데 최근 PageSpeed Insights 로 합쳐졌다고 합니다. <br><br><br><br>
+참고로, [web.dev의 측정 섹션](https://web.dev/measure/)에서도 코어 웹 바이탈 측정을 지원했는데 최근 PageSpeed Insights 로 합쳐졌다고 합니다. <br><br><br><br>  
+
+## 참고
+[Web Vitals](https://web.dev/vitals/)  
+[The business impact of Core Web Vitals](https://web.dev/vitals-business-impact/) 
+[Largest Contentful Paint(최대 콘텐츠풀 페인트, LCP)](https://web.dev/lcp/)    
+[First Input Delay(최초 입력 지연, FID)](https://web.dev/fid/)  
+[Cumulative Layout Shift(누적 레이아웃 이동, CLS)](https://web.dev/cls/)  
+[Core Web Vitals 메트릭 및 임계값 정의](https://web.dev/defining-core-web-vitals-thresholds/)  
+[Core Web Vitals 측정 도구](https://web.dev/vitals-tools/)  
+[성능 최적화](https://ui.toast.com/fe-guide/ko_PERFORMANCE#%EC%84%B1%EB%8A%A5-%EA%B0%9C%EC%84%A0-%EC%A7%80%ED%91%9C)
