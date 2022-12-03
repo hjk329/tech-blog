@@ -204,3 +204,7 @@ export default RatioBox;
 [Optimize Cumulative Layout Shift](https://web.dev/optimize-cls/)  
 [Keep request counts low and transfer sizes small](https://developer.chrome.com/docs/lighthouse/performance/resource-summary/)  
 [Replace animated GIFs with video for faster page loads](https://web.dev/replace-gifs-with-videos/)  
+
+
+[hjk329](https://hjk329.github.io/tags/#%EC%BD%94%EC%96%B4-%EC%9B%B9-%EB%B0%94%EC%9D%B4%ED%83%88): 
+제 개인 블로그에서도 코어 웹 바이탈과 관련한 포스팅을 확인하실 수 있어요 (소곤소곤)
