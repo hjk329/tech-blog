@@ -31,7 +31,7 @@ LCP  향상을 위해 사용한 전략은 아래와 같습니다.
 
 ![lcp 최적화 전](/assets/images/core-web-vitals/lcp-bad.png)  
 
-- webm으로 변환한 이미지 요소의 LCP
+- webp으로 변환한 이미지 요소의 LCP
 ![lcp 최적화 후](/assets/images/core-web-vitals/lcp-improved.png)
 
 
